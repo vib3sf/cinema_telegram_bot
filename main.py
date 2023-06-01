@@ -3,32 +3,29 @@ import requests
 import random
 
 
-def get_random_film(films):
-    return random.choice(films).text
-
-def main():
+def get_random_film():
     url = 'https://www.kinoafisha.info/rating/movies/'
     page = requests.get(url)
 
     if not page.status_code == 200:
         print('Something went wrong')
-        return 
+        return None
 
     soup = BeautifulSoup(page.text, 'html.parser')
     films = soup.findAll('a', 'movieItem_title')
 
     while True:
         if films:
-            film = get_random_film(films)
+            film = random.choice(films).text
             print(f'Your film: {film}. Want another?')
             if not input() == 'yes':
                 films.remove(film)
-                return
+                return film
         else:
             print('Films are over :(')
-
+            return None
 
 
 if __name__ == '__main__':
-    main()
+    get_random_film()
 
