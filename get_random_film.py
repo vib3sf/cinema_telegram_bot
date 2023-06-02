@@ -3,8 +3,7 @@ import requests
 import random
 
 
-def get_random_film():
-    url = 'https://www.kinoafisha.info/rating/movies/'
+def get_random_film(url, tag_title, class_title):
     page = requests.get(url)
 
     if not page.status_code == 200:
@@ -12,7 +11,7 @@ def get_random_film():
         return None
 
     soup = BeautifulSoup(page.text, 'html.parser')
-    films = soup.findAll('a', 'movieItem_title')
+    films = soup.findAll(tag_title, class_title)
 
     while True:
         if films:
@@ -27,5 +26,5 @@ def get_random_film():
 
 
 if __name__ == '__main__':
-    get_random_film()
+    get_random_film('https://www.kinoafisha.info/rating/movies/', 'a', 'movieItem_title')
 
