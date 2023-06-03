@@ -34,7 +34,7 @@ def collect_films(cursor):
 if __name__ == '__main__':
     start = time.time()
 
-    with sqlite3.connect('example.db') as connection:
+    with sqlite3.connect('films.db') as connection:
         cursor = connection.cursor()
 
         cursor.execute('''CREATE TABLE IF NOT EXISTS films(
