@@ -5,7 +5,7 @@ import random
 import time 
 import sqlite3
 import re
-
+import config
 
 re_year_country = re.compile(r'(\d{4}),\s+(.*)')
 
@@ -34,7 +34,7 @@ def collect_films(cursor):
 if __name__ == '__main__':
     start = time.time()
 
-    with sqlite3.connect('films.db') as connection:
+    with sqlite3.connect(config.DB_PATH) as connection:
         cursor = connection.cursor()
 
         cursor.execute('''CREATE TABLE IF NOT EXISTS films(

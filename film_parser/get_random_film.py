@@ -1,7 +1,7 @@
-from collect_films import collect_films
 from textwrap import dedent
 from random import choice
 import sqlite3
+import os
 
 
 def get_random_film():
