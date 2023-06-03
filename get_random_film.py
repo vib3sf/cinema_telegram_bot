@@ -5,11 +5,10 @@ import sqlite3
 
 
 def get_random_film():
-    connection = sqlite3.connect('films.db')
-    cur = connection.cursor()
-    cur.execute('SELECT title FROM films ORDER BY RANDOM() LIMIT 1;')
-    film = cur.fetchone()[0]
-    connection.close()
+    with sqlite3.connect('example.db') as connection:
+        cur = connection.cursor()
+        cur.execute('SELECT title FROM films ORDER BY RANDOM() LIMIT 1;')
+        film = cur.fetchone()[0]
     return f'Your film - {film}'
 
 

@@ -10,7 +10,7 @@ import re
 re_year_country = re.compile(r'(\d{4}),\s+(.*)')
 
 
-def collect_films(cur):
+def collect_films(cursor):
     url = 'https://www.kinoafisha.info/en/rating/movies/'
     for i in range(10):
         page = requests.get(f'{url}?page={i}')
@@ -28,25 +28,26 @@ def collect_films(cur):
                     'span', 'movieItem_year').text).groups()
             except:
                 continue
-            cur.execute('INSERT INTO films VALUES (?, ?, ?, ?)', (title, genre, country, year))
+            cursor.execute('INSERT INTO films VALUES (?, ?, ?, ?)', (title, genre, country, year))
 
 
 if __name__ == '__main__':
     start = time.time()
-    connection = sqlite3.connect('films.db')
-    cur = connection.cursor()
 
-    cur.execute('''CREATE TABLE IF NOT EXISTS films(
-        title TEXT,
-        genre TEXT,
-        country TEXT,
-        year INT
-        );
-    ''')
-    cur.execute("DELETE FROM films")
+    with sqlite3.connect('example.db') as connection:
+        cursor = connection.cursor()
 
-    collect_films(cur)
+        cursor.execute('''CREATE TABLE IF NOT EXISTS films(
+            title TEXT,
+            genre TEXT,
+            country TEXT,
+            year INT
+            );
+        ''')
+        cursor.execute("DELETE FROM films")
+
+        collect_films(cursor)
+        connection.commit()
+
     print(f'Execute time: {time.time() - start}')
-    connection.commit()
-    connection.close()
 
