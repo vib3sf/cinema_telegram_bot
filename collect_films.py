@@ -7,7 +7,7 @@ import sqlite3
 import re
 
 
-year_country_pattern = re.compile(r'(\d{4}),\s+(.*)')
+re_year_country = re.compile(r'(\d{4}),\s+(.*)')
 
 
 def collect_films(cur):
@@ -24,7 +24,8 @@ def collect_films(cur):
             title = item.find('a', 'movieItem_title').text
             genre = item.find('span', 'movieItem_genres').text
             try:
-                year, country = year_country_pattern.search(item.find('span', 'movieItem_year').text).groups()
+                year, country = re_year_country.search(item.find(
+                    'span', 'movieItem_year').text).groups()
             except:
                 continue
             cur.execute('INSERT INTO films VALUES (?, ?, ?, ?)', (title, genre, country, year))
@@ -48,6 +49,4 @@ if __name__ == '__main__':
     print(f'Execute time: {time.time() - start}')
     connection.commit()
     connection.close()
-
-
 
