@@ -4,10 +4,10 @@ from textwrap import dedent
 from random import choice
 
 
-def main():
-    print(f'Your film: {choice(collect_films())}.')
+def get_random_film():
+    return f'Ваш фильм: {choice(collect_films())}'
 
 
 if __name__ == '__main__':
-    main()
+    print(get_random_film())
 
