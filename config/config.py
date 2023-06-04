@@ -1,3 +1,4 @@
 import os
 
-DB_PATH = f'{os.getcwd()}/../films.db'
+TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
+DB_PATH = f'{os.getcwd()}/db.sqlite3'
