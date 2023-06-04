@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
@@ -15,7 +16,13 @@ async def main():
     dp = Dispatcher()
     dp.include_routers(get_random.router)
 
-    await collect_films()
+    parser = argparse.ArgumentParser(description='Cinema telegram bot')
+    parser.add_argument('-r', '--refresh', help='Refresh database', action='store_true')
+    args = parser.parse_args()
+
+    if args.refresh:
+        await collect_films()
+
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
