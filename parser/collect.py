@@ -5,12 +5,14 @@ import asyncio
 import aiohttp
 import re
 
-from utils.db_api import insert_film
+from utils.db_api import insert_film, refresh_table
 
 re_year_country = re.compile(r'(\d{4}),\s+(.*)')
 
 
-async def parse_films():
+async def collect_films():
+    await refresh_table()
+
     url = 'https://www.kinoafisha.info/en/rating/movies/'
     async with aiohttp.ClientSession() as session:
         for i in range(10):

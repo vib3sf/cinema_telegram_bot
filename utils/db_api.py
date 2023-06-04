@@ -14,7 +14,7 @@ async def insert_film(title: str, genre: str, country: str, year: int):
         await connection.commit()
     
 
-async def collect_films():
+async def refresh_table():
     async with aiosqlite.connect(config.DB_PATH) as connection:
 
         await connection.execute('''CREATE TABLE IF NOT EXISTS films(

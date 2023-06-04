@@ -3,7 +3,8 @@ import logging
 from aiogram import Bot, Dispatcher
 
 from config import config
-from handlers import get_random, refresh
+from handlers import get_random
+from parser.collect import collect_films
 
 
 async def main():
@@ -12,9 +13,9 @@ async def main():
     logging.basicConfig(level=logging.INFO)
 
     dp = Dispatcher()
-    dp.include_routers(get_random.router, refresh.router)
+    dp.include_routers(get_random.router)
 
-
+    await collect_films()
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
