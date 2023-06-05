@@ -31,19 +31,24 @@ async def insert_film(title: str, genre: str, country: str, year: int):
         await connection.commit()
     
 
-async def get_random_film() -> str:
+# tuple is condition of search from db, where first element is row and second is condition
+# if empty_tuple -> search from all films
+
+async def get_random_film(row_condition: tuple = ()) -> str:
+    if len(row_condition) not in (0, 2):
+        raise ValueError("Argument must only have two elements.")
+    
+    if row_condition and row_condition[0] not in ('title', 'genre', 'country', 'year'):
+        raise ValueError('Row is not exist in films table.')
+
+
+    row, condition = row_condition[0], f'WHERE {row_condition[0]}={row_condition[1]}' \
+        if row_condition else ('*', '')
+
     async with aiosqlite.connect(config.DB_PATH) as connection:
         cursor = await connection.cursor()
-        await cursor.execute('SELECT * FROM films ORDER BY RANDOM() LIMIT 1;')
+        await cursor.execute(f'SELECT {row} FROM films ORDER BY RANDOM() LIMIT 1 {condition};')
         film_fetch = await cursor.fetchone()
     return await represent_film(film_fetch)
-
-
-async def get_films_by_genre(genre: str):
-    async with aiosqlite.connect(config.DB_PATH) as connection:
-        cursor = await connection.cursor()
-        await cursor.execute('SELECT * FROM films WHERE genre=?', genre)
-        films_fetch = cursor.fetchall()
-    return await represent_list_films(films_fetch)
 
 
