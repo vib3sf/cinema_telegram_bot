@@ -27,7 +27,7 @@ async def refresh_table():
 async def insert_film(title: str, genre: str, country: str, year: int):
     async with aiosqlite.connect(config.DB_PATH) as connection:
         await connection.execute('INSERT INTO films VALUES (?, ?, ?, ?)',
-                                 (title, genre, country, year))
+                                 (title.lower(), genre.lower(), country.lower(), year))
         await connection.commit()
     
 
@@ -41,13 +41,18 @@ async def get_random_film(row_condition: tuple = ()) -> str:
     if row_condition and row_condition[0] not in ('title', 'genre', 'country', 'year'):
         raise ValueError('Row is not exist in films table.')
 
-
-    row, condition = (row_condition[0], f'WHERE {row_condition[0]}={row_condition[1]}') \
-        if row_condition else ('*', '')
+    if row_condition:
+        if row_condition[0] in ('genre', 'country'):
+            condition = f"WHERE {row_condition[0]} LIKE '%{row_condition[1]}%'"
+        elif row_condition[0] == 'year':
+            condition = f'WHERE {row_condition[0]}={row_condition[1]}'
+    else: 
+        condition = ''
 
     async with aiosqlite.connect(config.DB_PATH) as connection:
         cursor = await connection.cursor()
-        await cursor.execute(f'SELECT * FROM films {condition} ORDER BY RANDOM() LIMIT 1')
+        await cursor.execute(f'SELECT * FROM films {condition} ORDER BY RANDOM() LIMIT 1;')
+
         film_fetch = await cursor.fetchone()
     return await represent_film(film_fetch)
 
