@@ -27,7 +27,7 @@ async def refresh_table():
 async def insert_film(title: str, genre: str, country: str, year: int):
     async with aiosqlite.connect(config.DB_PATH) as connection:
         await connection.execute('INSERT INTO films VALUES (?, ?, ?, ?)',
-                                 (title.lower(), genre.lower(), country.lower(), year))
+                                 (title, genre, country, year))
         await connection.commit()
     
 
@@ -43,7 +43,7 @@ async def get_random_film(row_condition: tuple = ()) -> str:
 
     if row_condition:
         if row_condition[0] in ('genre', 'country'):
-            condition = f"WHERE {row_condition[0]} LIKE '%{row_condition[1]}%'"
+            condition = f"WHERE LOWER({row_condition[0]}) LIKE '%{row_condition[1]}%'"
         elif row_condition[0] == 'year':
             condition = f'WHERE {row_condition[0]}={row_condition[1]}'
     else: 
