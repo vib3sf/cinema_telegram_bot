@@ -42,12 +42,12 @@ async def get_random_film(row_condition: tuple = ()) -> str:
         raise ValueError('Row is not exist in films table.')
 
 
-    row, condition = row_condition[0], f'WHERE {row_condition[0]}={row_condition[1]}' \
+    row, condition = (row_condition[0], f'WHERE {row_condition[0]}={row_condition[1]}') \
         if row_condition else ('*', '')
 
     async with aiosqlite.connect(config.DB_PATH) as connection:
         cursor = await connection.cursor()
-        await cursor.execute(f'SELECT {row} FROM films ORDER BY RANDOM() LIMIT 1 {condition};')
+        await cursor.execute(f'SELECT * FROM films {condition} ORDER BY RANDOM() LIMIT 1')
         film_fetch = await cursor.fetchone()
     return await represent_film(film_fetch)
 
