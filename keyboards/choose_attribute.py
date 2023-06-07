@@ -1,4 +1,6 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import (
+    ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+)
 
 attribute_buttons = (
     "Any attribute", "Genre", "Country", "Year"
@@ -18,4 +20,12 @@ def get_attribute_keyboard():
         ],
         input_field_placeholder="Choose a attribute"
     )
+
+def try_again_keyboard():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+        InlineKeyboardButton(text='Try again', callback_data='try_again'),
+        InlineKeyboardButton(text='Another attribute', callback_data='change_attribute')
+        ]
+    ])
 
