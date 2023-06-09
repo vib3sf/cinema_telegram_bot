@@ -58,10 +58,11 @@ async def send_search_result(message: Message, state: FSMContext):
     await state.update_data(user_input=user_input)
     selected_attribute = user_data['selected_attribute']
 
+
     film = await get_random_film() if selected_attribute == 'any attribute' else \
         await get_random_film((selected_attribute, user_input))
-
-    await message.answer(film, reply_markup=try_again_keyboard())
+    
+    await message.answer(film['text'], reply_markup=try_again_keyboard(film['is_found']))
     await state.set_state(FormState.choosing_attribute)
 
 
@@ -69,12 +70,9 @@ async def send_search_result(message: Message, state: FSMContext):
 async def try_again(callback: CallbackQuery, state: FSMContext):
     await send_search_result(callback.message, state)
 
+
 @router.callback_query(Text('change_attribute'))
 async def change_attribute(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await start_search_random(callback.message, state)
-
-
-    
-    
 
