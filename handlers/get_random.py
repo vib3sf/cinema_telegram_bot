@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from keyboards.choose_attribute import (
     get_attribute_keyboard, attribute_buttons, try_again_keyboard)
-from utils.db_api import get_random_film
+from utils.db_api import get_random_film, insert_favorite
 
 router = Router()
 
@@ -64,6 +64,7 @@ async def send_search_result(message: Message, state: FSMContext):
     
     await message.answer(film['text'], reply_markup=try_again_keyboard(film['is_found']))
     await state.set_state(FormState.choosing_attribute)
+    await state.update_data(current_film=film['pk'])
 
 
 @router.callback_query(Text("try_again"))
@@ -75,4 +76,12 @@ async def try_again(callback: CallbackQuery, state: FSMContext):
 async def change_attribute(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await start_search_random(callback.message, state)
+
+
+@router.callback_query(Text('add_favorite'))
+async def add_favorite(message: Message, state: FSMContext):
+    user_data = await state.get_data()
+    await insert_favorite(user_data['current_film'], message.from_user.id) 
+
+
 

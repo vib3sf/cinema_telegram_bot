@@ -31,5 +31,6 @@ def try_again_keyboard(try_again: bool = True) -> InlineKeyboardMarkup:
             text='Try again', callback_data='try_again'
         ))
     builder.add(InlineKeyboardButton(text='Another attribute', callback_data='change_attribute'))
+    builder.row(InlineKeyboardButton(text='Add to favorites', callback_data='add_favorite'))
     return builder.as_markup()
 
