@@ -4,7 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher
 
 from config import config
-from handlers import get_random
+from handlers import get_random, start
 from parser.collect import collect_films
 
 
@@ -14,7 +14,7 @@ async def main():
     logging.basicConfig(level=logging.INFO)
 
     dp = Dispatcher()
-    dp.include_routers(get_random.router)
+    dp.include_routers(start.router, get_random.router)
 
     parser = argparse.ArgumentParser(description='Cinema telegram bot')
     parser.add_argument('-r', '--refresh', help='Refresh database', action='store_true')

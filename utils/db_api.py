@@ -5,7 +5,7 @@ from textwrap import dedent
 from random import choice
 
 from config import config
-from .representation import represent_film
+from .messages import represent_film
 
 
 async def refresh_table():
