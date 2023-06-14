@@ -17,7 +17,7 @@ async def show_favorites(message: Message):
             represent_film(film), 
             reply_markup=get_remove_keyboard(film[0])
         )
-    else:
+    if not films:
         await message.answer('No favorites :(')
 
 
