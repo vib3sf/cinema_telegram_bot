@@ -24,4 +24,5 @@ async def show_favorites(message: Message):
 @router.callback_query(lambda c: c.data.startswith('remove_favorite_'))
 async def remove_favorite(callback: CallbackQuery):
     await delete_favorite(callback.data.split('_')[-1])
+    await callback.message.delete()
 
