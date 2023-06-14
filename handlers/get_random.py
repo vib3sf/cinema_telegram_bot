@@ -79,9 +79,8 @@ async def change_attribute(callback: CallbackQuery, state: FSMContext):
 
 
 @router.callback_query(Text('add_favorite'))
-async def add_favorite(message: Message, state: FSMContext):
+async def add_favorite(callback: CallbackQuery, state: FSMContext):
     user_data = await state.get_data()
-    await insert_favorite(user_data['current_film'], message.from_user.id) 
-
+    await insert_favorite(user_data['current_film'], callback.message.chat.id) 
 
 
