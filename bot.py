@@ -15,7 +15,7 @@ async def main():
     logging.basicConfig(level=logging.INFO)
 
     dp = Dispatcher()
-    dp.include_routers(start.router, get_random.router, favorites.router)
+    dp.include_routers(start.router,favorites.router, get_random.router)
 
     parser = argparse.ArgumentParser(description='Cinema telegram bot')
 

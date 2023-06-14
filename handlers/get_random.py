@@ -19,6 +19,7 @@ class FormState(StatesGroup):
 
 @router.message(Command('random'))
 async def start_search_random(message: Message, state: FSMContext):
+    await state.clear()
     await message.answer(
         text='Choose film attribute for searching.', 
         reply_markup=get_attribute_keyboard()
