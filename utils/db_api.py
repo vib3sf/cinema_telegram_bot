@@ -58,6 +58,21 @@ async def insert_favorite(film_id: int, user_id: int):
         await connection.commit()
 
 
+async def get_favorites(user_id: int) -> tuple:
+    async with aiosqlite.connect(config.DB_PATH) as connection:
+        cursor = await connection.cursor()
+        await cursor.execute('''SELECT * FROM films INNER JOIN favorites
+                             ON films.pk = favorites.film_id
+                             WHERE favorites.user_id = ?''', (user_id, ))
+        return await cursor.fetchall()
+
+
+async def delete_favorite(film_id: int):
+    async with aiosqlite.connect(config.DB_PATH) as connection:
+        await connection.execute('DELETE FROM favorites WHERE film_id=?', (film_id, ))
+        await connection.commit()
+
+
 # tuple is condition of search from db, where first element is row and second is condition
 # if empty_tuple -> search from all films
 async def get_random_film(row_condition: tuple = ()) -> dict:
@@ -84,6 +99,7 @@ async def get_random_film(row_condition: tuple = ()) -> dict:
         await cursor.execute(f'SELECT * FROM films {condition} ORDER BY RANDOM() LIMIT 1;')
 
         film_fetch = await cursor.fetchone()
-    return {'text': represent_film(film_fetch), 'is_found': bool(film_fetch), 'pk': film_fetch[0]}
+    return {'text': represent_film(film_fetch), 'is_found': bool(film_fetch), 
+            'pk': film_fetch[0] if film_fetch else None}
 
 
